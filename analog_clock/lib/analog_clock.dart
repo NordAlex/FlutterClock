@@ -79,8 +79,6 @@ class _AnalogClockState extends State<AnalogClock> {
   void _updateTime() {
     setState(() {
       _now = DateTime.now();
-      // Update once per second. Make sure to do it at the beginning of each
-      // new second, so that the clock is accurate.
       _timer = Timer(
         Duration(seconds: 1) - Duration(milliseconds: _now.millisecond),
         _updateTime,
@@ -90,51 +88,38 @@ class _AnalogClockState extends State<AnalogClock> {
 
   @override
   Widget build(BuildContext context) {
-    // There are many ways to apply themes to your clock. Some are:
-    //  - Inherit the parent Theme (see ClockCustomizer in the
-    //    flutter_clock_helper package).
-    //  - Override the Theme.of(context).colorScheme.
-    //  - Create your own [ThemeData], demonstrated in [AnalogClock].
-    //  - Create a map of [Color]s to custom keys, demonstrated in
-    //    [DigitalClock].
+
     var customTheme = Theme.of(context).brightness == Brightness.light
         ? Theme.of(context).copyWith(
-            // Hour hand.
-            primaryColor: Color(0xFF4285F4),
-            // Minute hand.
-            highlightColor: Color(0xFF31323C),
-            // Second hand.
-            accentColor: Color(0xFF669DF6),
-            backgroundColor: Color(0xFFE8E8E8) //Color(0xFFD2E3FC),
-            )
+            primaryColor: Color(0xFFFFFFFF),
+            backgroundColor: Color(0xFFE8E8E8),
+            textTheme: Theme.of(context)
+                .textTheme
+                .apply(bodyColor: Colors.black, displayColor: Colors.black))
         : Theme.of(context).copyWith(
-            primaryColor: Color(0xFFD2E3FC),
-            highlightColor: Color(0xFF4285F4),
-            accentColor: Color(0xFF8AB4F8),
+            primaryColor: Color(0xFFCDCDCD),
             backgroundColor: Color(0xFF3C4043),
             textTheme: Theme.of(context)
                 .textTheme
-                .apply(bodyColor: Colors.black, displayColor: Colors.black));
+                .apply(bodyColor: Colors.grey, displayColor: Colors.grey));
+
+
 
     final time = DateFormat.Hms().format(DateTime.now());
     final weatherInfo = DefaultTextStyle(
-      style: customTheme.primaryTextTheme.display3,
+      style: customTheme.textTheme.display4,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             _location,
-            style: customTheme.textTheme.display4,
           ),
           Text(
             _temperature,
-            style: customTheme.textTheme.display4,
           ),
           Text(
             _condition,
-            style: customTheme.textTheme.display4,
           ),
-          // Text(_temperatureRange),
         ],
       ),
     );
@@ -145,7 +130,12 @@ class _AnalogClockState extends State<AnalogClock> {
         value: time,
       ),
       child: Container(
-        color: customTheme.backgroundColor,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: [0.5, 1],
+                colors: [customTheme.backgroundColor, Color(0xFFCCCCCC)])),
         child: Stack(children: [
           DrawnBezierCurve(
             startPointHeight: 0.9,
@@ -173,9 +163,9 @@ class _AnalogClockState extends State<AnalogClock> {
                       child: Container(
                         child: Stack(
                           children: [
-                            DrawnClockFace(),
+                            DrawnClockFace(backgroundColor: customTheme.primaryColor,),
                             DrawnCircle(
-                              color: Colors.white,
+                              color: customTheme.primaryColor,
                               circleSize: 0.06,
                             ),
                             DrawnCircle(
@@ -183,7 +173,7 @@ class _AnalogClockState extends State<AnalogClock> {
                               circleSize: 0.05,
                             ),
                             DrawnCircle(
-                              color: Colors.white,
+                              color: customTheme.primaryColor,
                               circleSize: 0.04,
                             ),
                             DrawnHand(
@@ -200,7 +190,7 @@ class _AnalogClockState extends State<AnalogClock> {
                                   (_now.minute / 60) * radiansPerHour,
                             ),
                             DrawnCircle(
-                              color: Colors.white,
+                              color: customTheme.primaryColor,
                               circleSize: 0.039,
                             ),
                           ],

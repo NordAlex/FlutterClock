@@ -19,6 +19,18 @@ class DrawnBezierCurve extends StatelessWidget {
   final double startPointHeight;
   @override
   Widget build(BuildContext context) {
+
+   var bezierColors = Theme.of(context).brightness == Brightness.light
+    ? {
+        1 : Color(0xFFBBDEFB),
+        2 : Color(0xFF68E3C1),
+        3 : Color(0xFFE8E413),
+    } :{
+        1 : Color(0xFFC99DA2),
+        2 : Color(0xFF656680),
+        3 : Color(0xFFA38D6F),
+    } ;
+
     return Center(
       child: SizedBox.expand(
         child: CustomPaint(
@@ -26,7 +38,8 @@ class DrawnBezierCurve extends StatelessWidget {
               color: color,
               controlPointCount: controlPointCount,
               controlPointHeight: controlPointHeight,
-              startPointHeight: startPointHeight),
+              startPointHeight: startPointHeight,
+              bezierColors: bezierColors),
         ),
       ),
     );
@@ -38,12 +51,14 @@ class _BezierPainter extends CustomPainter {
       {@required this.controlPointCount,
       @required this.controlPointHeight,
       @required this.startPointHeight,
-      @required this.color})
+      @required this.color,
+      @required this.bezierColors})
       : assert(controlPointHeight > 0),
         assert(controlPointHeight < 1.0),
         assert(startPointHeight > 0),
         assert(startPointHeight < 1.0),
         assert(controlPointCount > 0),
+        assert(bezierColors != null),
         assert(color != null);
 
   final Color color;
@@ -51,10 +66,12 @@ class _BezierPainter extends CustomPainter {
   final double controlPointHeight;
   final double startPointHeight;
 
+  final Map<int, Color> bezierColors;
+
   @override
   void paint(Canvas canvas, Size size) {
     final linePaint = Paint()
-      ..color = Colors.blue
+      ..color = bezierColors[1]
       ..style = PaintingStyle.stroke
       ..strokeWidth = 14.0;
 
@@ -73,7 +90,7 @@ class _BezierPainter extends CustomPainter {
     canvas.drawPath(path, linePaint);
 
     final linePaint1 = Paint()
-      ..color = Color(0xFFe8e413)
+      ..color = bezierColors[2]
       ..style = PaintingStyle.stroke
       ..strokeWidth = 14.0;
 
@@ -92,7 +109,7 @@ class _BezierPainter extends CustomPainter {
     canvas.drawPath(path2, linePaint1);
 
     final linePaint3 = Paint()
-      ..color = Color(0xFF67e3c1)
+      ..color = bezierColors[3]
       ..style = PaintingStyle.stroke
       ..strokeWidth = 14.0;
 
