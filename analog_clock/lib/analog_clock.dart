@@ -9,8 +9,11 @@ import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 import 'package:vector_math/vector_math_64.dart' show radians;
 
+import 'drawn_bezier_curve.dart';
+import 'drawn_clock_face.dart';
 import 'drawn_hand.dart';
 
 /// Total distance traveled by a second or a minute hand, each second or minute,
@@ -35,7 +38,6 @@ class AnalogClock extends StatefulWidget {
 class _AnalogClockState extends State<AnalogClock> {
   var _now = DateTime.now();
   var _temperature = '';
-  var _temperatureRange = '';
   var _condition = '';
   var _location = '';
   Timer _timer;
@@ -43,6 +45,7 @@ class _AnalogClockState extends State<AnalogClock> {
   @override
   void initState() {
     super.initState();
+
     widget.model.addListener(_updateModel);
     // Set the initial values.
     _updateTime();
@@ -68,7 +71,6 @@ class _AnalogClockState extends State<AnalogClock> {
   void _updateModel() {
     setState(() {
       _temperature = widget.model.temperatureString;
-      _temperatureRange = '(${widget.model.low} - ${widget.model.highString})';
       _condition = widget.model.weatherString;
       _location = widget.model.location;
     });
@@ -95,7 +97,7 @@ class _AnalogClockState extends State<AnalogClock> {
     //  - Create your own [ThemeData], demonstrated in [AnalogClock].
     //  - Create a map of [Color]s to custom keys, demonstrated in
     //    [DigitalClock].
-    final customTheme = Theme.of(context).brightness == Brightness.light
+    var customTheme = Theme.of(context).brightness == Brightness.light
         ? Theme.of(context).copyWith(
             // Hour hand.
             primaryColor: Color(0xFF4285F4),
@@ -103,120 +105,119 @@ class _AnalogClockState extends State<AnalogClock> {
             highlightColor: Color(0xFF31323C),
             // Second hand.
             accentColor: Color(0xFF669DF6),
-            backgroundColor: Color(0xFFD2E3FC),
-          )
+            backgroundColor: Color(0xFFE8E8E8) //Color(0xFFD2E3FC),
+            )
         : Theme.of(context).copyWith(
             primaryColor: Color(0xFFD2E3FC),
             highlightColor: Color(0xFF4285F4),
             accentColor: Color(0xFF8AB4F8),
             backgroundColor: Color(0xFF3C4043),
-          );
+            textTheme: Theme.of(context)
+                .textTheme
+                .apply(bodyColor: Colors.black, displayColor: Colors.black));
 
     final time = DateFormat.Hms().format(DateTime.now());
     final weatherInfo = DefaultTextStyle(
-      style: TextStyle(color: customTheme.primaryColor),
+      style: customTheme.primaryTextTheme.display3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(_temperature),
-          Text(_temperatureRange),
-          Text(_condition),
-          Text(_location),
+          Text(
+            _location,
+            style: customTheme.textTheme.display4,
+          ),
+          Text(
+            _temperature,
+            style: customTheme.textTheme.display4,
+          ),
+          Text(
+            _condition,
+            style: customTheme.textTheme.display4,
+          ),
+          // Text(_temperatureRange),
         ],
       ),
     );
 
-return  Semantics.fromProperties(
+    return Semantics.fromProperties(
       properties: SemanticsProperties(
         label: 'Analog clock with time $time',
         value: time,
       ),
-      child: 
-          Container(
-            color: customTheme.backgroundColor,
-            child: Row(
-              children: <Widget>[
-                Expanded(flex: 6, child: Container(),),
-                Expanded( flex: 4, 
-                                child: Column(
-                                  children: <Widget>[
-                                    Expanded( flex: 6,
-                                                                          child: Container(
-                                        
-                    child: Stack(
-                      children: [
-
-                        DrawnCircle(
-                          color: Colors.white,
-                          radius: 230,
-                        ),
-                        DrawnCircle(
-                          color: Colors.white,
-                          radius: 15,
-                        ),
-                         DrawnCircle(
-                          color: Colors.black,
-                          radius: 14,
-                        ),
-                         DrawnCircle(
-                          color: Colors.white,
-                          radius: 13,
-                        ),
-                        DrawnHand(
-                          color: customTheme.highlightColor,
-                          thickness: 16,
-                          size: 0.9,
-                          angleRadians: _now.minute * radiansPerTick,
-                        ),
-                        DrawnHand(
-                          color: customTheme.highlightColor,
-                          thickness: 16,
-                          size: 0.5,
-                          angleRadians: _now.hour * radiansPerHour +
-                              (_now.minute / 60) * radiansPerHour,
-                        ),
-
-                         DrawnCircle(
-                          color: Colors.white,
-                          radius: 11.5,
-                        ),
-                        // Example of a hand drawn with [Container].
-                        // ContainerHand(
-                        //   color: Colors.transparent,
-                        //   size: 0.5,
-                        //   angleRadians: _now.hour * radiansPerHour +
-                        //       (_now.minute / 60) * radiansPerHour,
-                        //   child: Transform.translate(
-                        //     offset: Offset(0.0, -60.0),
-                        //     child: Container(
-                        //       width: 32,
-                        //       height: 150,
-                        //       decoration: BoxDecoration(
-                        //         color: customTheme.primaryColor,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        Positioned(
-                          left: 0,
-                          bottom: 0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: weatherInfo,
-                          ),
-                        ),
-                      ],
-                    ),
-                  
-      ),
-                                    ),
-                                    Expanded(flex: 4, child: Container(),)
-                                  ],
-                                ),
-                ),
-              ],
-            ),
+      child: Container(
+        color: customTheme.backgroundColor,
+        child: Stack(children: [
+          DrawnBezierCurve(
+            startPointHeight: 0.9,
+            controlPointCount: 4,
+            controlPointHeight: 0.1,
+            color: Colors.red,
           ),
+          Row(
+            children: <Widget>[
+              Expanded(
+                flex: 5,
+                child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: weatherInfo,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 5,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 9,
+                      child: Container(
+                        child: Stack(
+                          children: [
+                            DrawnClockFace(),
+                            DrawnCircle(
+                              color: Colors.white,
+                              circleSize: 0.06,
+                            ),
+                            DrawnCircle(
+                              color: Colors.black,
+                              circleSize: 0.05,
+                            ),
+                            DrawnCircle(
+                              color: Colors.white,
+                              circleSize: 0.04,
+                            ),
+                            DrawnHand(
+                              color: customTheme.highlightColor,
+                              thickness: 16,
+                              size: 0.9,
+                              angleRadians: _now.minute * radiansPerTick,
+                            ),
+                            DrawnHand(
+                              color: customTheme.highlightColor,
+                              thickness: 16,
+                              size: 0.5,
+                              angleRadians: _now.hour * radiansPerHour +
+                                  (_now.minute / 60) * radiansPerHour,
+                            ),
+                            DrawnCircle(
+                              color: Colors.white,
+                              circleSize: 0.039,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Container(),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ]),
+      ),
     );
   }
 }

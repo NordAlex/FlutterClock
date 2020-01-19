@@ -82,42 +82,33 @@ class _HandPainter extends CustomPainter {
     final angle2 = angle + math.pi;
 
     // final position2 = center + Offset(math.cos(angle2), math.sin(angle2)) * (length * 0.05);
-    final position2 = center + Offset(math.cos(angle2), math.sin(angle2)) * 20;
+    final startPosition =
+        center + Offset(math.cos(angle2), math.sin(angle2)) * 20;
 
+    final finishPosition =
+        center + Offset(math.cos(angle), math.sin(angle)) * length;
 
-    final position = center + Offset(math.cos(angle), math.sin(angle)) * length;
-    // final linePaint = Paint()
-      // ..color = color
-      // ..strokeWidth = lineWidth
-      // ..strokeCap = StrokeCap.square;
-
- Paint linePaint = Paint()
+    Paint linePaint = Paint()
       ..color = Colors.black
       ..style = PaintingStyle.stroke
       ..strokeWidth = lineWidth;
 
+    final offcet = lineWidth * 0.7;
+
     Path path = Path();
-    path.moveTo(position2.dx, position2.dy);
-    path.lineTo(position.dx, position.dy);
+    path.moveTo(startPosition.dx, startPosition.dy);
+    path.lineTo(finishPosition.dx, finishPosition.dy);
     // Draws a line from left top corner to right bottom
-    //path.lineTo(size.width, size.height);
 
     canvas.drawPath(path, linePaint);
 
-    final offcet = lineWidth * 0.86;
     final shadowPath = Path();
-    shadowPath.moveTo(position2.dx-offcet, position2.dy-offcet);
+    shadowPath.moveTo(startPosition.dx + offcet, startPosition.dy);
+    shadowPath.lineTo(startPosition.dx - offcet, startPosition.dy);
 
-    shadowPath.lineTo(position.dx, position.dy);
-    shadowPath.lineTo(position.dx+offcet, position.dy+offcet);
+    shadowPath.lineTo(finishPosition.dx - offcet, finishPosition.dy);
+    shadowPath.lineTo(finishPosition.dx + offcet, finishPosition.dy);
 
-
-    shadowPath.lineTo(position2.dx+offcet, position2.dy+offcet);
-    // path.moveTo(0, 0);
-    // path.lineTo(150, 150);
-    // path.lineTo(100, 150);
-
-   
     canvas.drawShadow(shadowPath, Colors.black, 4.0, true);
   }
 

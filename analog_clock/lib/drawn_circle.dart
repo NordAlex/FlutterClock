@@ -2,20 +2,19 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 class DrawnCircle extends StatelessWidget{
 
   const DrawnCircle({
     @required this.color,
-    @required this.radius
+    @required this.circleSize
   })  : assert(color != null),
-        assert(radius != null);
+        assert(circleSize >= 0.0),
+        assert(circleSize <= 1.0);
 
 
-  final double radius;
+  final double circleSize;
   final Color color;
 
   @override
@@ -25,8 +24,7 @@ class DrawnCircle extends StatelessWidget{
         child: CustomPaint(
           painter: _CirclePainter(
             color: color,
-            radius: radius,
-
+            circleSize: circleSize,
           ),
         ),
       ),
@@ -34,31 +32,32 @@ class DrawnCircle extends StatelessWidget{
   }
 }
 
-/// [CustomPainter] that draws a clock hand.
 class _CirclePainter extends CustomPainter {
   _CirclePainter({
     @required this.color,
-    @required this.radius,
-  })  : assert(radius != null),
+    @required this.circleSize,
+  })  : assert(circleSize != null),
         assert(color != null);
 
   Color color;
-  double radius;
+  double circleSize;
 
   @override
   void paint(Canvas canvas, Size size) {
     var center = (Offset.zero & size).center;
 
+    final radius = (size.shortestSide * circleSize) / 2;
+    
     final linePaint = Paint()
       ..color = color;
-
+    
     canvas.drawCircle(center, radius, linePaint);
   }
 
   @override
   bool shouldRepaint(_CirclePainter oldDelegate) {
     return 
-        oldDelegate.radius != radius ||
+        oldDelegate.circleSize != circleSize ||
         oldDelegate.color != color;
   }
 }
