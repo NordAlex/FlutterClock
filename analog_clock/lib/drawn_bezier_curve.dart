@@ -70,62 +70,66 @@ class _BezierPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final linePaint = Paint()
+
+    final smallOffcet = 0.1;
+    final middleOffcet = 0.5;
+
+    final firstLinePaint = Paint()
+      ..style = PaintingStyle.stroke
       ..color = bezierColors[1]
-      ..style = PaintingStyle.stroke
       ..strokeWidth = 14.0;
 
-    final path = Path();
+    final firstLinePath = Path();
+    final firstLineHeight = 0.75;
 
-    final height3 = 0.75;
-    path.moveTo(-5, size.height * height3);
-    path.quadraticBezierTo(size.width * 0.125, size.height * (height3 - 0.1),
-        size.width * 0.25, size.height * height3);
-    path.quadraticBezierTo(size.width * 0.375, size.height * (height3 + 0.1),
-        size.width * 0.5, size.height * height3);
-    path.quadraticBezierTo(size.width * 0.625, size.height * (height3 - 0.1),
-        size.width * 0.75, size.height * height3);
-    path.quadraticBezierTo(size.width * 0.825, size.height * (height3 + 0.1),
-        size.width + 5, size.height * height3);
-    canvas.drawPath(path, linePaint);
+    firstLinePath.moveTo(-5, size.height * firstLineHeight);
+    firstLinePath.quadraticBezierTo(size.width * 0.125, size.height * (firstLineHeight - smallOffcet),
+        size.width * 0.25, size.height * firstLineHeight);
+    firstLinePath.quadraticBezierTo(size.width * 0.375, size.height * (firstLineHeight + smallOffcet),
+        size.width * 0.5, size.height * firstLineHeight);
+    firstLinePath.quadraticBezierTo(size.width * 0.625, size.height * (firstLineHeight - smallOffcet),
+        size.width * 0.75, size.height * firstLineHeight);
+    firstLinePath.quadraticBezierTo(size.width * 0.825, size.height * (firstLineHeight + smallOffcet),
+        size.width + 5, size.height * firstLineHeight);
+    canvas.drawPath(firstLinePath, firstLinePaint);
 
-    final linePaint1 = Paint()
+    final secondLinePaint = Paint()
+      ..style = PaintingStyle.stroke
       ..color = bezierColors[2]
-      ..style = PaintingStyle.stroke
       ..strokeWidth = 14.0;
 
-    final path2 = Path();
-    final height = 0.8;
+    final secondLinePath = Path();
+    final secondLineHeight = 0.8;
 
-    path2.moveTo(-5, size.height * height);
-    path2.quadraticBezierTo(size.width * 0.125, size.height * (height - 0.5),
-        size.width * 0.25, size.height * height);
-    path2.quadraticBezierTo(size.width * 0.375, size.height * (height + 0.5),
-        size.width * 0.5, size.height * height);
-    path2.quadraticBezierTo(size.width * 0.625, size.height * (height - 0.5),
-        size.width * 0.75, size.height * height);
-    path2.quadraticBezierTo(size.width * 0.825, size.height * (height + 0.5),
-        size.width + 5, size.height * height);
-    canvas.drawPath(path2, linePaint1);
+    secondLinePath.moveTo(-5, size.height * secondLineHeight);
+    secondLinePath.quadraticBezierTo(size.width * 0.125, size.height * (secondLineHeight - middleOffcet) * 1.2,
+        size.width * 0.25, size.height * secondLineHeight);
+    secondLinePath.quadraticBezierTo(size.width * 0.375, size.height * (secondLineHeight + middleOffcet),
+        size.width * 0.5, size.height * secondLineHeight);
+    secondLinePath.quadraticBezierTo(size.width * 0.625, size.height * (secondLineHeight - middleOffcet),
+        size.width * 0.75, size.height * secondLineHeight);
+    secondLinePath.quadraticBezierTo(size.width * 0.825, size.height * (secondLineHeight + middleOffcet),
+        size.width + 5, size.height * secondLineHeight);
+    canvas.drawPath(secondLinePath, secondLinePaint);
 
-    final linePaint3 = Paint()
+    final thirdLinePaint = Paint()
+      ..style = PaintingStyle.stroke
       ..color = bezierColors[3]
-      ..style = PaintingStyle.stroke
       ..strokeWidth = 14.0;
 
-    final path3 = Path();
-    final height1 = 0.65;
+    final thirdLinePath = Path();
+    final thirdLineHeight = 0.65;
 
-    path3.moveTo(-5, size.height * height1);
-    path3.quadraticBezierTo(size.width * 0.125, size.height * (height1 + 0.5),
-        size.width * 0.25, size.height * height1);
-    path3.quadraticBezierTo(size.width * 0.375, size.height * (height1 - 0.5),
-        size.width * 0.5, size.height * height1);
-    path3.quadraticBezierTo(size.width * 0.625, size.height * (height1 + 0.5),
-        size.width * 0.75, size.height * height1);
-    path3.quadraticBezierTo(size.width * 0.825, size.height * (height1 - 0.5),
-        size.width + 5, size.height * height1);
-    canvas.drawPath(path3, linePaint3);
+    thirdLinePath.moveTo(-5, size.height * thirdLineHeight);
+    thirdLinePath.quadraticBezierTo(size.width * 0.125, size.height * (thirdLineHeight + middleOffcet),
+        size.width * 0.25, size.height * thirdLineHeight);
+    thirdLinePath.quadraticBezierTo(size.width * 0.375, size.height * (thirdLineHeight - middleOffcet),
+        size.width * 0.5, size.height * thirdLineHeight);
+    thirdLinePath.quadraticBezierTo(size.width * 0.625, size.height * (thirdLineHeight + middleOffcet),
+        size.width * 0.75, size.height * thirdLineHeight);
+    thirdLinePath.quadraticBezierTo(size.width * 0.825, size.height * (thirdLineHeight - middleOffcet),
+        size.width + 5, size.height * thirdLineHeight);
+    canvas.drawPath(thirdLinePath, thirdLinePaint);
   }
 
   @override

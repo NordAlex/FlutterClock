@@ -88,7 +88,6 @@ class _AnalogClockState extends State<AnalogClock> {
 
   @override
   Widget build(BuildContext context) {
-
     var customTheme = Theme.of(context).brightness == Brightness.light
         ? Theme.of(context).copyWith(
             primaryColor: Color(0xFFFFFFFF),
@@ -102,8 +101,6 @@ class _AnalogClockState extends State<AnalogClock> {
             textTheme: Theme.of(context)
                 .textTheme
                 .apply(bodyColor: Colors.grey, displayColor: Colors.grey));
-
-
 
     final time = DateFormat.Hms().format(DateTime.now());
     final weatherInfo = DefaultTextStyle(
@@ -135,7 +132,7 @@ class _AnalogClockState extends State<AnalogClock> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 stops: [0.5, 1],
-                colors: [customTheme.backgroundColor, Color(0xFFCCCCCC)])),
+                colors: [customTheme.backgroundColor, customTheme.primaryColor])),
         child: Stack(children: [
           DrawnBezierCurve(
             startPointHeight: 0.9,
@@ -163,7 +160,9 @@ class _AnalogClockState extends State<AnalogClock> {
                       child: Container(
                         child: Stack(
                           children: [
-                            DrawnClockFace(backgroundColor: customTheme.primaryColor,),
+                            DrawnClockFace(
+                              backgroundColor: customTheme.primaryColor,
+                            ),
                             DrawnCircle(
                               color: customTheme.primaryColor,
                               circleSize: 0.06,
