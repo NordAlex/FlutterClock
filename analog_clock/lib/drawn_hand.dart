@@ -73,39 +73,34 @@ class _HandPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    var center = (Offset.zero & size).center;
+    final center = (Offset.zero & size).center;
 
-    // We want to start at the top, not at the x-axis, so add pi/2.
-    final angle = angleRadians - math.pi / 2.0;
+    final startAngle = angleRadians - math.pi / 2.0;
     final length = size.shortestSide * 0.5 * handSize;
 
-    final angle2 = angle + math.pi;
+    final finishAngle = startAngle + math.pi;
 
-    // final position2 = center + Offset(math.cos(angle2), math.sin(angle2)) * (length * 0.05);
     final startPosition =
-        center + Offset(math.cos(angle2), math.sin(angle2)) * 20;
-
+        center + Offset(math.cos(finishAngle), math.sin(finishAngle)) * 20;
     final finishPosition =
-        center + Offset(math.cos(angle), math.sin(angle)) * length;
+        center + Offset(math.cos(startAngle), math.sin(startAngle)) * length;
 
-    Paint linePaint = Paint()
+    final linePaint = Paint()
       ..color = Colors.black
       ..style = PaintingStyle.stroke
       ..strokeWidth = lineWidth;
-
     final offcet = lineWidth * 0.7;
 
-    Path path = Path();
+    final path = Path();
     path.moveTo(startPosition.dx, startPosition.dy);
     path.lineTo(finishPosition.dx, finishPosition.dy);
-    // Draws a line from left top corner to right bottom
 
     canvas.drawPath(path, linePaint);
 
     final shadowPath = Path();
     shadowPath.moveTo(startPosition.dx + offcet, startPosition.dy);
     shadowPath.lineTo(startPosition.dx - offcet, startPosition.dy);
-
+    
     shadowPath.lineTo(finishPosition.dx - offcet, finishPosition.dy);
     shadowPath.lineTo(finishPosition.dx + offcet, finishPosition.dy);
 

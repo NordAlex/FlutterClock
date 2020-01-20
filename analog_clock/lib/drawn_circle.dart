@@ -44,10 +44,10 @@ class _CirclePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    var center = (Offset.zero & size).center;
 
     final radius = (size.shortestSide * circleSize) / 2;
-    
+    final center = (Offset.zero & size).center;
+       
     final linePaint = Paint()
       ..color = color;
     

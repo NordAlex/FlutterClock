@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'drawn_circle.dart';
 
 class DrawnClockFace extends StatelessWidget {
-
-  const DrawnClockFace({this.backgroundColor}) : assert(backgroundColor != null);
+  const DrawnClockFace({this.backgroundColor})
+      : assert(backgroundColor != null);
   final Color backgroundColor;
   @override
   Widget build(BuildContext context) {
@@ -35,11 +35,9 @@ class _CircleShadowPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    var center = (Offset.zero & size).center;
-
     final radius = (size.shortestSide * circleSize) / 2;
-
-    Path oval = Path()
+    final center = (Offset.zero & size).center;
+    final oval = Path()
       ..addOval(Rect.fromCircle(center: center, radius: radius + 1));
 
     canvas.drawShadow(oval, Colors.black, 4.0, true);
